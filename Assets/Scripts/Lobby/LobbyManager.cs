@@ -12,10 +12,11 @@ namespace Dispersion.Lobby
         [SerializeField] private GameObject loadingLayer, joinLayer, menuLayer, createRoomLayer, joinRoomLayer, roomLayer;
         [SerializeField] private Button connectButton, createRoomButton, createAndJoinRoomButton, joinRoomButton, quitButton, backButton, leaveRoomButton, startGameButton;
         [SerializeField] private TMP_InputField roomNameText, playerNameText;
-        [SerializeField] private TextMeshProUGUI roomName;
+        [SerializeField] private TextMeshProUGUI roomName, weaponsText;
         [SerializeField] private GameObject roomInfoPrefab, roomInfoParent, playerListItem, playerParent;
-        [SerializeField] private string slashString;
+        [SerializeField] private string slashString, weaponEndText;
         [SerializeField] private int maxPlayerPerRoom, zero, one, minNameTextValue, maxNameTextValue;
+        [SerializeField] private List<string> weaponNameList;
 
         public static LobbyManager Instance { get; private set; }
 
@@ -158,6 +159,11 @@ namespace Dispersion.Lobby
         private void StartGame()
         {
             PhotonNetwork.LoadLevel(one);
+        }
+
+        public void WeaponSelected(int index)
+        {
+            weaponsText.text = weaponNameList[index] + weaponEndText;
         }
 
         private void GoBackToMainLobby()

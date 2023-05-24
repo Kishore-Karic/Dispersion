@@ -1,4 +1,7 @@
+using Dispersion.Game;
+using Dispersion.Weapons;
 using Photon.Pun;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Dispersion.Players
@@ -10,6 +13,7 @@ namespace Dispersion.Players
         [SerializeField] private float minVerticalRotation, maxVerticalRotation;
         [SerializeField] private GameObject cameraHolder;
         [SerializeField] private PhotonView _photonView;
+        [SerializeField] private List<WeaponController> weaponList;
 
         private float verticalLookRotation;
         private bool isGrounded;
@@ -22,6 +26,7 @@ namespace Dispersion.Players
                 Destroy(cameraHolder);
                 Destroy(rigidBody);
             }
+            weaponList[GameManager.Instance.weapon].gameObject.SetActive(true);
         }
 
         private void Update()
