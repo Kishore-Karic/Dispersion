@@ -8,18 +8,18 @@ namespace Dispersion.Weapons.RangedWeapons
         [SerializeField] private Camera cam;
         [SerializeField] private float rayXAxis, rayYAxis;
 
-        public override void Use()
+        public override void Use(Photon.Realtime.Player killer)
         {
-            Shoot();
+            Shoot(killer);
         }
 
-        private void Shoot()
+        private void Shoot(Photon.Realtime.Player killer)
         {
             Ray ray = cam.ViewportPointToRay(new Vector3(rayXAxis, rayYAxis));
             ray.origin = cam.transform.position;
             if(Physics.Raycast(ray, out RaycastHit hit))
             {
-                hit.collider.gameObject.GetComponent<IDamagable>()?.TakeDamage(weaponInfo.damage);
+                hit.collider.gameObject.GetComponent<IDamagable>()?.TakeDamage(weaponInfo.damage, killer);
             }
         }
     }

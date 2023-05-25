@@ -3,6 +3,7 @@ using Dispersion.Interface;
 using Dispersion.Weapons;
 using Photon.Pun;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,13 +14,13 @@ namespace Dispersion.Players
         [SerializeField] private float mouseSensitivity, movementSpeed, jumpForce, smoothTime;
         [SerializeField] private Rigidbody rigidBody;
         [SerializeField] private float minVerticalRotation, maxVerticalRotation;
-        [SerializeField] private GameObject cameraHolder, ui;
+        [SerializeField] private GameObject cameraHolder, healthBarUI, nameUI;
         [SerializeField] private PhotonView _photonView;
         [SerializeField] private List<WeaponController> weaponList;
-        [SerializeField] private int zero;
+        [SerializeField] private int zero, rotationAngle;
         [SerializeField] private float playerMaxHealth;
-        [SerializeField] private string rpcTakeDamageString, rpcWeaponString;
         [SerializeField] private Image healthBarImage;
+        [SerializeField] private TextMeshProUGUI nameText;
 
         private float verticalLookRotation;
         private bool isGrounded;
@@ -27,26 +28,31 @@ namespace Dispersion.Players
         private int weaponIndex;
         private float maxHealth, currentHealth;
         private PlayerManager playerManager;
+        private Camera cam;
 
         private void Start()
         {
             playerManager = PhotonView.Find((int)_photonView.InstantiationData[zero]).GetComponent<PlayerManager>();
-
             maxHealth = playerMaxHealth;
             currentHealth = maxHealth;
+            nameText.text = _photonView.Owner.NickName;
             weaponIndex = GameManager.Instance.weapon;
+
             if (PhotonNetwork.IsMasterClient)
             {
-                _photonView.RPC(rpcWeaponString, RpcTarget.All, weaponIndex);
+                _photonView.RPC(nameof(RPC_Weapon), RpcTarget.All, weaponIndex);
             }
 
             if (!_photonView.IsMine)
             {
                 Destroy(cameraHolder);
                 Destroy(rigidBody);
-                Destroy(ui);
+                Destroy(healthBarUI);
             }
-            
+            if (_photonView.IsMine)
+            {
+                nameUI.SetActive(false);
+            }
         }
 
         private void Update()
@@ -59,8 +65,18 @@ namespace Dispersion.Players
 
                 if(Input.GetMouseButtonDown(zero))
                 {
-                    weaponList[weaponIndex].Use();
+                    weaponList[weaponIndex].Use(_photonView.Owner);
                 }
+            }
+            else
+            {
+                if(cam == null)
+                {
+                    cam = FindObjectOfType<Camera>();
+                }
+
+                nameUI.transform.LookAt(cam.transform);
+                nameUI.transform.Rotate(Vector3.up * rotationAngle);
             }
         }
 
@@ -102,9 +118,9 @@ namespace Dispersion.Players
             isGrounded = _value;
         }
 
-        public void TakeDamage(float damage)
+        public void TakeDamage(float damage, Photon.Realtime.Player killer)
         {
-            _photonView.RPC(rpcTakeDamageString, RpcTarget.All, damage);
+            _photonView.RPC(nameof(RPC_TakeDamage), _photonView.Owner, damage, killer);
         }
 
         [PunRPC]
@@ -119,24 +135,20 @@ namespace Dispersion.Players
         }
 
         [PunRPC]
-        private void RPC_TakeDamage(float damage)
+        private void RPC_TakeDamage(float damage, Photon.Realtime.Player killer)
         {
-            if (!_photonView.IsMine)
-            {
-                return;
-            }
-
             currentHealth -= damage;
             healthBarImage.fillAmount = currentHealth / maxHealth;
 
             if (currentHealth <= zero)
             {
-                Die();
+                Die(killer);
             }
         }
 
-        private void Die()
+        private void Die(Photon.Realtime.Player killer)
         {
+            GameManager.Instance.UpdateGameStats(_photonView.Owner, killer);
             playerManager.Die();
         }
     }

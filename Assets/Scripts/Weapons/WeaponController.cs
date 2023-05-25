@@ -7,6 +7,6 @@ namespace Dispersion.Weapons
         [field: SerializeField] public WeaponInfo weaponInfo { get; private set; }
         [SerializeField] private GameObject weaponGameObject;
 
-        public abstract void Use();
+        public abstract void Use(Photon.Realtime.Player killer);
     }
 }
