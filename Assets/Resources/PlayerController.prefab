@@ -202,8 +202,12 @@ MonoBehaviour:
   cameraHolder: {fileID: 5522922057697452616}
   _photonView: {fileID: 8632658353764605282}
   weaponList:
-  - {fileID: 4032060477963349520}
-  - {fileID: 3376885592040901145}
+  - {fileID: 8272178411013285620}
+  - {fileID: 8488907272304078855}
+  zero: 0
+  playerMaxHealth: 100
+  rpcTakeDamageString: RPC_TakeDamage
+  rpcWeaponString: RPC_Weapon
 --- !u!114 &8632658353764605282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,9 +256,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8287635700153976339}
-  - component: {fileID: 3376885592040901145}
+  - component: {fileID: 8488907272304078855}
   m_Layer: 0
-  m_Name: Weapon2Holder
+  m_Name: Shotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -276,7 +280,7 @@ Transform:
   m_Father: {fileID: 1263880500833948138}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3376885592040901145
+--- !u!114 &8488907272304078855
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -285,11 +289,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 502496720325300842}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d618551b4ae101419803a05cfe0f314, type: 3}
+  m_Script: {fileID: 11500000, guid: 4039ea0068dd96c4eb5e2a78ff64a841, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponInfo: {fileID: 11400000, guid: fcf3bb01efa37a94c8ff0ad2d0ec4440, type: 2}
+  <weaponInfo>k__BackingField: {fileID: 11400000, guid: fcf3bb01efa37a94c8ff0ad2d0ec4440, type: 2}
   weaponGameObject: {fileID: 3770800459509020647}
+  cam: {fileID: 2811854156641179502}
+  rayXAxis: 0.5
+  rayYAxis: 0.5
 --- !u!1 &533183759540634759
 GameObject:
   m_ObjectHideFlags: 0
@@ -706,9 +713,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6521979146156826021}
-  - component: {fileID: 4032060477963349520}
+  - component: {fileID: 8272178411013285620}
   m_Layer: 0
-  m_Name: Weapon1Holder
+  m_Name: Pistol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -730,7 +737,7 @@ Transform:
   m_Father: {fileID: 1263880500833948138}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4032060477963349520
+--- !u!114 &8272178411013285620
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -739,8 +746,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8924706413589393209}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d618551b4ae101419803a05cfe0f314, type: 3}
+  m_Script: {fileID: 11500000, guid: e68dbadae930560489ebf30fd1a7c39e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponInfo: {fileID: 11400000, guid: 91fc418bab6c289488d11f1c9f66ab9e, type: 2}
+  <weaponInfo>k__BackingField: {fileID: 11400000, guid: 91fc418bab6c289488d11f1c9f66ab9e, type: 2}
   weaponGameObject: {fileID: 2088684313026413459}
+  cam: {fileID: 2811854156641179502}
+  rayXAxis: 0.5
+  rayYAxis: 0.5

@@ -5,12 +5,15 @@ namespace Dispersion.Players
 {
     public class PlayerManager : MonoBehaviour
     {
-        [SerializeField] private PhotonView _phototnView;
+        [SerializeField] private PhotonView _photonView;
         [SerializeField] private string playerControllerString;
+        [SerializeField] private int zero;
+
+        private GameObject player;
 
         private void Start()
         {
-            if (_phototnView.IsMine)
+            if (_photonView.IsMine)
             {
                 CreateController();
             }
@@ -18,7 +21,13 @@ namespace Dispersion.Players
 
         private void CreateController()
         {
-            PhotonNetwork.Instantiate(playerControllerString, Vector3.zero, Quaternion.identity);
+            player = PhotonNetwork.Instantiate(playerControllerString, Vector3.zero, Quaternion.identity, (byte)zero, new object[] { _photonView.ViewID });
+        }
+
+        public void Die()
+        {
+            PhotonNetwork.Destroy(player);
+            CreateController();
         }
     }
 }

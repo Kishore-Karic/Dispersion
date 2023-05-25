@@ -4265,6 +4265,7 @@ MonoBehaviour:
   roomInfoParent: {fileID: 1721907618}
   playerListItem: {fileID: 912249374693178560, guid: 4f5c242ecfe7b004a9968dcf5a7c2102, type: 3}
   playerParent: {fileID: 1059967427}
+  weaponsLayer: {fileID: 935810991}
   slashString: /
   weaponEndText: ' Selected'
   maxPlayerPerRoom: 5

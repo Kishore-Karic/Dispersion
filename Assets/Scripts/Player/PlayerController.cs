@@ -1,4 +1,5 @@
 using Dispersion.Game;
+using Dispersion.Interface;
 using Dispersion.Weapons;
 using Photon.Pun;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace Dispersion.Players
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IDamagable
     {
         [SerializeField] private float mouseSensitivity, movementSpeed, jumpForce, smoothTime;
         [SerializeField] private Rigidbody rigidBody;
@@ -14,19 +15,33 @@ namespace Dispersion.Players
         [SerializeField] private GameObject cameraHolder;
         [SerializeField] private PhotonView _photonView;
         [SerializeField] private List<WeaponController> weaponList;
+        [SerializeField] private int zero, playerMaxHealth;
+        [SerializeField] private string rpcTakeDamageString, rpcWeaponString;
 
         private float verticalLookRotation;
         private bool isGrounded;
         private Vector3 smoothMoveVelocity, moveAmount;
+        private int weaponIndex, maxHealth, currentHealth;
+        private PlayerManager playerManager;
 
         private void Start()
         {
+            playerManager = PhotonView.Find((int)_photonView.InstantiationData[zero]).GetComponent<PlayerManager>();
+
+            maxHealth = playerMaxHealth;
+            currentHealth = maxHealth;
+            weaponIndex = GameManager.Instance.weapon;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                _photonView.RPC(rpcWeaponString, RpcTarget.All, weaponIndex);
+            }
+
             if (!_photonView.IsMine)
             {
                 Destroy(cameraHolder);
                 Destroy(rigidBody);
             }
-            weaponList[GameManager.Instance.weapon].gameObject.SetActive(true);
+            
         }
 
         private void Update()
@@ -36,6 +51,11 @@ namespace Dispersion.Players
                 Look();
                 Move();
                 Jump();
+
+                if(Input.GetMouseButtonDown(zero))
+                {
+                    weaponList[weaponIndex].Use();
+                }
             }
         }
 
@@ -75,6 +95,43 @@ namespace Dispersion.Players
         public void SetGroundedState(bool _value)
         {
             isGrounded = _value;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            _photonView.RPC(rpcTakeDamageString, RpcTarget.All, damage);
+        }
+
+        [PunRPC]
+        private void RPC_Weapon(int weapon)
+        {
+            foreach(WeaponController go in weaponList)
+            {
+                go.gameObject.SetActive(false);
+            }
+            weaponIndex = weapon;
+            weaponList[weaponIndex].gameObject.SetActive(true);
+        }
+
+        [PunRPC]
+        private void RPC_TakeDamage(int damage) 
+        {
+            if (!_photonView.IsMine)
+            {
+                return;
+            }
+
+            currentHealth -= damage;
+
+            if (currentHealth <= zero)
+            {
+                Die();
+            }
+        }
+
+        private void Die()
+        {
+            playerManager.Die();
         }
     }
 }

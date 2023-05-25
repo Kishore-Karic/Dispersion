@@ -13,7 +13,7 @@ namespace Dispersion.Lobby
         [SerializeField] private Button connectButton, createRoomButton, createAndJoinRoomButton, joinRoomButton, quitButton, backButton, leaveRoomButton, startGameButton;
         [SerializeField] private TMP_InputField roomNameText, playerNameText;
         [SerializeField] private TextMeshProUGUI roomName, weaponsText;
-        [SerializeField] private GameObject roomInfoPrefab, roomInfoParent, playerListItem, playerParent;
+        [SerializeField] private GameObject roomInfoPrefab, roomInfoParent, playerListItem, playerParent, weaponsLayer;
         [SerializeField] private string slashString, weaponEndText;
         [SerializeField] private int maxPlayerPerRoom, zero, one, minNameTextValue, maxNameTextValue;
         [SerializeField] private List<string> weaponNameList;
@@ -80,6 +80,7 @@ namespace Dispersion.Lobby
             loadingLayer.SetActive(false);
 
             startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+            weaponsLayer.gameObject.SetActive(PhotonNetwork.IsMasterClient);
         }
 
         public override void OnRoomListUpdate(List<RoomInfo> roomList)

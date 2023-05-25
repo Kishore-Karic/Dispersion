@@ -45,8 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481784072862a154591284e4792e6a10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _phototnView: {fileID: 5782694477748987026}
+  _photonView: {fileID: 5782694477748987026}
   playerControllerString: PlayerController
+  zero: 0
 --- !u!114 &5782694477748987026
 MonoBehaviour:
   m_ObjectHideFlags: 0

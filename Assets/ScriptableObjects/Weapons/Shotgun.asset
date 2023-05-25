@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Shotgun
   m_EditorClassIdentifier: 
   weaponName: Shotgun
+  damage: 75
