@@ -135,12 +135,12 @@ namespace Dispersion.Lobby
 
         private void CreateAndJoinRoom()
         {
-            loadingLayer.SetActive(true);
             if (roomNameText.text.Length > zero)
             {
+                loadingLayer.SetActive(true);
                 RoomOptions roomOptions = new RoomOptions();
                 roomOptions.MaxPlayers = maxPlayerPerRoom;
-
+                
                 PhotonNetwork.CreateRoom(roomNameText.text, roomOptions);
                 createRoomLayer.SetActive(false);
             }

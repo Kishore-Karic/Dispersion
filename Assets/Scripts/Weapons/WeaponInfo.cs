@@ -5,6 +5,6 @@ namespace Dispersion.Weapons
     public class WeaponInfo : ScriptableObject
     {
         public string weaponName;
-        public int damage;
+        public float damage;
     }
 }

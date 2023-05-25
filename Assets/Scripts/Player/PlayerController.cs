@@ -4,6 +4,7 @@ using Dispersion.Weapons;
 using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Dispersion.Players
 {
@@ -12,16 +13,19 @@ namespace Dispersion.Players
         [SerializeField] private float mouseSensitivity, movementSpeed, jumpForce, smoothTime;
         [SerializeField] private Rigidbody rigidBody;
         [SerializeField] private float minVerticalRotation, maxVerticalRotation;
-        [SerializeField] private GameObject cameraHolder;
+        [SerializeField] private GameObject cameraHolder, ui;
         [SerializeField] private PhotonView _photonView;
         [SerializeField] private List<WeaponController> weaponList;
-        [SerializeField] private int zero, playerMaxHealth;
+        [SerializeField] private int zero;
+        [SerializeField] private float playerMaxHealth;
         [SerializeField] private string rpcTakeDamageString, rpcWeaponString;
+        [SerializeField] private Image healthBarImage;
 
         private float verticalLookRotation;
         private bool isGrounded;
         private Vector3 smoothMoveVelocity, moveAmount;
-        private int weaponIndex, maxHealth, currentHealth;
+        private int weaponIndex;
+        private float maxHealth, currentHealth;
         private PlayerManager playerManager;
 
         private void Start()
@@ -40,6 +44,7 @@ namespace Dispersion.Players
             {
                 Destroy(cameraHolder);
                 Destroy(rigidBody);
+                Destroy(ui);
             }
             
         }
@@ -97,7 +102,7 @@ namespace Dispersion.Players
             isGrounded = _value;
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(float damage)
         {
             _photonView.RPC(rpcTakeDamageString, RpcTarget.All, damage);
         }
@@ -114,7 +119,7 @@ namespace Dispersion.Players
         }
 
         [PunRPC]
-        private void RPC_TakeDamage(int damage) 
+        private void RPC_TakeDamage(float damage)
         {
             if (!_photonView.IsMine)
             {
@@ -122,6 +127,7 @@ namespace Dispersion.Players
             }
 
             currentHealth -= damage;
+            healthBarImage.fillAmount = currentHealth / maxHealth;
 
             if (currentHealth <= zero)
             {

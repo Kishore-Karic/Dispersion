@@ -1,3 +1,4 @@
+using Dispersion.Game;
 using Photon.Pun;
 using UnityEngine;
 
@@ -21,7 +22,9 @@ namespace Dispersion.Players
 
         private void CreateController()
         {
-            player = PhotonNetwork.Instantiate(playerControllerString, Vector3.zero, Quaternion.identity, (byte)zero, new object[] { _photonView.ViewID });
+            Transform spawnPoint = SpawnManager.Instance.GetRandomSpawnPoint();
+
+            player = PhotonNetwork.Instantiate(playerControllerString, spawnPoint.position, spawnPoint.rotation, (byte)zero, new object[] { _photonView.ViewID });
         }
 
         public void Die()
