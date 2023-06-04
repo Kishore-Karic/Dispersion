@@ -91,7 +91,7 @@ Transform:
   m_GameObject: {fileID: 397843284411926063}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 58624063002793914}
@@ -209,6 +209,7 @@ MonoBehaviour:
   - {fileID: 8272178411013285620}
   - {fileID: 8488907272304078855}
   zero: 0
+  one: 1
   rotationAngle: 180
   playerMaxHealth: 100
   healthBarImage: {fileID: 4067595973282190190}
@@ -1157,7 +1158,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -5
   m_TargetDisplay: 0
 --- !u!114 &6525828479880815060
 MonoBehaviour:

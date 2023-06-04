@@ -10,7 +10,7 @@ namespace Dispersion.Players
         [SerializeField] private string playerControllerString;
         [SerializeField] private int zero;
 
-        private GameObject player;
+        public GameObject player;
 
         private void Start()
         {
@@ -20,17 +20,25 @@ namespace Dispersion.Players
             }
         }
 
+        public Transform GetSpawnPoint()
+        {
+            return SpawnManager.Instance.GetRandomSpawnPoint();
+        }
+
         private void CreateController()
         {
-            Transform spawnPoint = SpawnManager.Instance.GetRandomSpawnPoint();
+            Transform spawnPoint = GetSpawnPoint();
 
             player = PhotonNetwork.Instantiate(playerControllerString, spawnPoint.position, spawnPoint.rotation, (byte)zero, new object[] { _photonView.ViewID });
         }
 
-        public void Die()
+        public void DieAndSpawn()
         {
-            PhotonNetwork.Destroy(player);
-            CreateController();
+            player.SetActive(false);
+            Transform spawnPoint = GetSpawnPoint();
+            player.transform.position = spawnPoint.position;
+            player.transform.rotation = spawnPoint.rotation;
+            player.SetActive(true);
         }
     }
 }

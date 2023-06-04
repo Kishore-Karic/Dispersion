@@ -37,20 +37,48 @@ namespace Dispersion.Lobby
             backButton.onClick.AddListener(GoBackToMainLobby);
             leaveRoomButton.onClick.AddListener(LeaveRoom);
             startGameButton.onClick.AddListener(StartGame);
+        }
 
-            PhotonNetwork.ConnectUsingSettings();
-            PhotonNetwork.AutomaticallySyncScene = true;
+        private void Start()
+        {
+            if (PhotonNetwork.IsConnected)
+            {
+                loadingLayer.SetActive(false);
+                joinLayer.SetActive(false);
+                joinRoomLayer.SetActive(false);
+                backButton.gameObject.SetActive(false);
+
+                if (PhotonNetwork.CurrentRoom == null)
+                {
+                    menuLayer.SetActive(true);
+                    roomLayer.SetActive(false);
+                }
+                else
+                {
+                    menuLayer.SetActive(false);
+                    roomLayer.SetActive(true);
+
+                    roomName.text = PhotonNetwork.CurrentRoom.Name;
+                    Player[] players = PhotonNetwork.PlayerList;
+                    for (int i = zero; i < players.Length; i++)
+                    {
+                        Instantiate(playerListItem, playerParent.transform).GetComponent<PlayerListItem>().SetUpPlayer(players[i]);
+                    }
+
+                    startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+                    weaponsLayer.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+                }
+            }
+            else
+            {
+                PhotonNetwork.ConnectUsingSettings();
+                PhotonNetwork.AutomaticallySyncScene = true;
+            }
         }
 
         public override void OnConnectedToMaster()
         {
             loadingLayer.SetActive(false);
-        }
-
-        public override void OnJoinedLobby()
-        {
-            joinLayer.SetActive(false);
-            menuLayer.SetActive(true);
         }
 
         public override void OnCreatedRoom()
@@ -116,8 +144,8 @@ namespace Dispersion.Lobby
         public override void OnLeftRoom()
         {
             roomLayer.SetActive(false);
+            joinRoomLayer.SetActive(false);
             menuLayer.SetActive(true);
-            playerNameText.gameObject.SetActive(true);
         }
 
         private void ConnectToLobby()
@@ -131,6 +159,8 @@ namespace Dispersion.Lobby
                 PhotonNetwork.LocalPlayer.NickName = Random.Range(minNameTextValue, maxNameTextValue).ToString();
             }
             PhotonNetwork.JoinLobby();
+            joinLayer.SetActive(false);
+            menuLayer.SetActive(true);
         }
 
         private void CreateAndJoinRoom()
@@ -171,20 +201,21 @@ namespace Dispersion.Lobby
         {
             createRoomLayer.SetActive(false);
             joinRoomLayer.SetActive(false);
+            roomLayer.SetActive(false);
             menuLayer.SetActive(true);
             backButton.gameObject.SetActive(false);
         }
 
         private void ShowRoomList()
         {
-            menuLayer.SetActive(false);
-            joinRoomLayer.SetActive(true);
-            backButton.gameObject.SetActive(true);
-
             if (!PhotonNetwork.InLobby)
             {
                 PhotonNetwork.JoinLobby();
             }
+
+            menuLayer.SetActive(false);
+            joinRoomLayer.SetActive(true);
+            backButton.gameObject.SetActive(true);
         }
 
         private void ShowCreateRoomLayer()

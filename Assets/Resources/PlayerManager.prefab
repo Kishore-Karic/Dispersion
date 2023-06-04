@@ -48,6 +48,7 @@ MonoBehaviour:
   _photonView: {fileID: 5782694477748987026}
   playerControllerString: PlayerController
   zero: 0
+  player: {fileID: 0}
 --- !u!114 &5782694477748987026
 MonoBehaviour:
   m_ObjectHideFlags: 0
