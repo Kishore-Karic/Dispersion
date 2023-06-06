@@ -7,10 +7,10 @@ namespace Dispersion.Players
     public class PlayerManager : MonoBehaviour
     {
         [SerializeField] private PhotonView _photonView;
-        [SerializeField] private string playerControllerString;
+        [SerializeField] private PlayerController playerController;
         [SerializeField] private int zero;
 
-        public GameObject player;
+        private GameObject player;
 
         private void Start()
         {
@@ -29,7 +29,7 @@ namespace Dispersion.Players
         {
             Transform spawnPoint = GetSpawnPoint();
 
-            player = PhotonNetwork.Instantiate(playerControllerString, spawnPoint.position, spawnPoint.rotation, (byte)zero, new object[] { _photonView.ViewID });
+            player = PhotonNetwork.Instantiate(playerController.name, spawnPoint.position, spawnPoint.rotation, (byte)zero, new object[] { _photonView.ViewID });
         }
 
         public void DieAndSpawn()

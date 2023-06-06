@@ -1,3 +1,4 @@
+using Dispersion.Enum;
 using Dispersion.Game;
 using Dispersion.Interface;
 using Dispersion.Weapons;
@@ -44,8 +45,8 @@ namespace Dispersion.Players
 
             if (PhotonNetwork.IsMasterClient)
             {
-                playerManager.player = gameObject;
                 _photonView.RPC(nameof(RPC_Weapon), RpcTarget.All, weaponIndex);
+                _photonView.RPC(nameof(RPC_SetTotalPoints), RpcTarget.All, GameManager.Instance.totalPoints);
             }
 
             if (!_photonView.IsMine)
@@ -76,7 +77,7 @@ namespace Dispersion.Players
                     Move();
                     Jump();
 
-                    if (Input.GetMouseButtonDown(zero))
+                    if (Input.GetMouseButtonDown(zero) && !isGameEnd)
                     {
                         weaponList[weaponIndex].Use(_photonView.Owner);
                     }
@@ -154,6 +155,13 @@ namespace Dispersion.Players
             }
             weaponIndex = weapon;
             weaponList[weaponIndex].gameObject.SetActive(true);
+            weaponList[weaponIndex].SoundType = (Sounds)weaponIndex;
+        }
+
+        [PunRPC]
+        private void RPC_SetTotalPoints(int totalPoints)
+        {
+            RoomManager.Instance.SetTotalPoints(totalPoints);
         }
 
         [PunRPC]
@@ -170,11 +178,11 @@ namespace Dispersion.Players
 
         private void Die(Player killer)
         {
-            _photonView.RPC(nameof(RPC_SyncData), RpcTarget.All, _photonView.Owner, killer);
             if (!RoomManager.Instance.IsGameEnd(killer))
             {
                 playerManager.DieAndSpawn();
             }
+            _photonView.RPC(nameof(RPC_SyncData), RpcTarget.All, _photonView.Owner, killer);
         }
 
         [PunRPC]

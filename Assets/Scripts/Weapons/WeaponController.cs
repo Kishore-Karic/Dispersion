@@ -1,3 +1,4 @@
+using Dispersion.Enum;
 using UnityEngine;
 
 namespace Dispersion.Weapons
@@ -6,6 +7,10 @@ namespace Dispersion.Weapons
     {
         [field: SerializeField] public WeaponInfo weaponInfo { get; private set; }
         [SerializeField] private GameObject weaponGameObject;
+        [SerializeField] protected Animator animator;
+        [SerializeField] protected float nextAttackTime;
+
+        public Sounds SoundType;
 
         public abstract void Use(Photon.Realtime.Player killer);
     }

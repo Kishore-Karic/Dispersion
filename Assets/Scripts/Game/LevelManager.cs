@@ -14,13 +14,12 @@ namespace Dispersion.Game
         [SerializeField] private string wonString;
         [SerializeField] private Camera cam;
         [SerializeField] private int one;
-        [SerializeField] private GameObject endCanvas, limitedPlayerCanvas, scoreBoardPrefab, scoreBoardParent, masterLayer, clientLayer;
-
+        [SerializeField] private GameObject endCanvas, limitedPlayerCanvas, scoreBoardPrefab, scoreBoardParent, masterLayer, clientLayer, pauseLayer;
+        
         public static LevelManager Instance { get; private set; }
-
+        
         private void Awake()
         {
-
             if (Instance == null)
             {
                 Instance = this;
@@ -82,6 +81,16 @@ namespace Dispersion.Game
         public void LimitedPlayers()
         {
             limitedPlayerCanvas.SetActive(true);
+        }
+
+        public void Pause()
+        {
+            pauseLayer.SetActive(true);
+        }
+
+        public void Resume()
+        {
+            pauseLayer.SetActive(false);
         }
     }
 }

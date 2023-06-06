@@ -11,12 +11,14 @@ namespace Dispersion.Game
 {
     public class RoomManager : MonoBehaviourPunCallbacks
     {
-        [SerializeField] private int zero, one, winningPoints, killScoreValue;
-        [SerializeField] private GameObject playerManagerPrefab;
-        [field: SerializeField] public GameObject playersParent { get; private set; }
+        [SerializeField] private int zero, one, killScoreValue;
+        [SerializeField] private PlayerManager playerManager;
 
         private Dictionary<Player, Dictionary<ScoreType, int>> playersScore;
         public static RoomManager Instance { get; private set; }
+
+        private bool isEndScreen;
+        private int winningPoints;
 
         private void Awake()
         {
@@ -28,6 +30,8 @@ namespace Dispersion.Game
             {
                 Destroy(gameObject);
             }
+
+            isEndScreen = false;
         }
 
         public override void OnEnable()
@@ -46,7 +50,7 @@ namespace Dispersion.Game
         {
             if (scene.buildIndex == one)
             {
-                PhotonNetwork.Instantiate(playerManagerPrefab.name, Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate(playerManager.name, Vector3.zero, Quaternion.identity);
 
                 playersScore = new Dictionary<Player, Dictionary<ScoreType, int>>();
 
@@ -55,6 +59,11 @@ namespace Dispersion.Game
                     LevelManager.Instance.LimitedPlayers();
                 }
             }
+        }
+
+        public void SetTotalPoints(int totalPoints)
+        {
+            winningPoints = totalPoints;
         }
 
         public void UpdateGameStats(Player player, Player killer, PlayerController playerController)
@@ -119,6 +128,7 @@ namespace Dispersion.Game
 
             if (killScore == winningPoints)
             {
+                isEndScreen = true;
                 playerController.GameEnd();
                 SortPlayersByKills(killer);
             }
@@ -126,9 +136,19 @@ namespace Dispersion.Game
 
         public bool IsGameEnd(Player killer)
         {
+            if (!playersScore.ContainsKey(killer))
+            {
+                playersScore[killer] = new Dictionary<ScoreType, int>();
+            }
+
+            if (!playersScore[killer].ContainsKey(ScoreType.kills))
+            {
+                playersScore[killer].Add(ScoreType.kills, zero);
+            }
+
             int score = zero;
             playersScore[killer].TryGetValue(ScoreType.kills, out score);
-            return (score + one == winningPoints || score == winningPoints);
+            return (score == winningPoints);
         }
 
         private void SortPlayersByKills(Player winner)
@@ -145,7 +165,7 @@ namespace Dispersion.Game
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
-            if (otherPlayer != PhotonNetwork.LocalPlayer && PhotonNetwork.PlayerList.Length == one)
+            if (otherPlayer != PhotonNetwork.LocalPlayer && PhotonNetwork.PlayerList.Length == one && !isEndScreen)
             {
                 LevelManager.Instance.LimitedPlayers();
             }

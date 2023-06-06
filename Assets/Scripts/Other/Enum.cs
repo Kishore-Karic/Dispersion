@@ -6,4 +6,11 @@ namespace Dispersion.Enum
         deaths,
         totalScore
     }
+
+    public enum Sounds
+    {
+        batHit,
+        pistolFire,
+        shotgunFire
+    }
 }

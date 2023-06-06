@@ -4,6 +4,7 @@ using Photon.Pun;
 using UnityEngine.UI;
 using Photon.Realtime;
 using TMPro;
+using Dispersion.Game;
 
 namespace Dispersion.Lobby
 {
@@ -12,13 +13,15 @@ namespace Dispersion.Lobby
         [SerializeField] private GameObject loadingLayer, joinLayer, menuLayer, createRoomLayer, joinRoomLayer, roomLayer;
         [SerializeField] private Button connectButton, createRoomButton, createAndJoinRoomButton, joinRoomButton, quitButton, backButton, leaveRoomButton, startGameButton;
         [SerializeField] private TMP_InputField roomNameText, playerNameText;
-        [SerializeField] private TextMeshProUGUI roomName, weaponsText;
-        [SerializeField] private GameObject roomInfoPrefab, roomInfoParent, playerListItem, playerParent, weaponsLayer;
-        [SerializeField] private string slashString, weaponEndText;
+        [SerializeField] private TextMeshProUGUI roomName, weaponsText, totalPointText;
+        [SerializeField] private GameObject roomInfoPrefab, roomInfoParent, playerListItem, playerParent, masterLayer;
+        [SerializeField] private string slashString, weaponEndText, totalPointsString;
         [SerializeField] private int maxPlayerPerRoom, zero, one, minNameTextValue, maxNameTextValue;
         [SerializeField] private List<string> weaponNameList;
+        [SerializeField] private Slider totalPointSlider;
 
         public static LobbyManager Instance { get; private set; }
+        private int totalPoint;
 
         private void Awake()
         {
@@ -30,6 +33,7 @@ namespace Dispersion.Lobby
             {
                 Destroy(gameObject);
             }
+
             connectButton.onClick.AddListener(ConnectToLobby);
             createRoomButton.onClick.AddListener(ShowCreateRoomLayer);
             createAndJoinRoomButton.onClick.AddListener(CreateAndJoinRoom);
@@ -37,6 +41,7 @@ namespace Dispersion.Lobby
             backButton.onClick.AddListener(GoBackToMainLobby);
             leaveRoomButton.onClick.AddListener(LeaveRoom);
             startGameButton.onClick.AddListener(StartGame);
+            quitButton.onClick.AddListener(QuitGame);
         }
 
         private void Start()
@@ -66,7 +71,7 @@ namespace Dispersion.Lobby
                     }
 
                     startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
-                    weaponsLayer.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+                    masterLayer.SetActive(PhotonNetwork.IsMasterClient);
                 }
             }
             else
@@ -108,7 +113,7 @@ namespace Dispersion.Lobby
             loadingLayer.SetActive(false);
 
             startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
-            weaponsLayer.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+            masterLayer.SetActive(PhotonNetwork.IsMasterClient);
         }
 
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -189,12 +194,20 @@ namespace Dispersion.Lobby
 
         private void StartGame()
         {
+            GameManager.Instance.SetTotalPoints(totalPoint);
             PhotonNetwork.LoadLevel(one);
         }
 
         public void WeaponSelected(int index)
         {
+            GameManager.Instance.SelectWeapon(index);
             weaponsText.text = weaponNameList[index] + weaponEndText;
+        }
+
+        public void SetTotalPoint()
+        {
+            totalPoint = (int)totalPointSlider.value;
+            totalPointText.text = totalPointsString + totalPoint;
         }
 
         private void GoBackToMainLobby()
@@ -223,6 +236,11 @@ namespace Dispersion.Lobby
             menuLayer.SetActive(false);
             createRoomLayer.SetActive(true);
             backButton.gameObject.SetActive(true);
+        }
+
+        private void QuitGame()
+        {
+            Application.Quit();
         }
     }
 }
