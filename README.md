@@ -12,7 +12,7 @@ A First-Person Multiplayer Shooting Game with Create and Join room mechanism usi
 6. Leaderboard will show Player's Rank wise according to Kills.
 7. If any Player's have same Kills means their Rank will be decided by Number of Deaths (least will top the Leaderboard).
 8. After Game End Master can get back to Room all the Player's in the Room will get back with the Master as well.
-9. Or Client can Leave Room instead of waiting for the Master.
+9. Client can Leave Room instead of waiting for the Master.
 10. Sound system with weapons Sound Effects.
 
 # Design Patterns
