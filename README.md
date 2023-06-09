@@ -1,5 +1,5 @@
 # Dispersion
-A First-Person Multiplayer Shooting Game with Create and Join room mechanism. </br>
+A First-Person Multiplayer Shooting Game with Create and Join room mechanism using Photon PUN2. </br>
 [Gameplay Trailer](https://youtu.be/QRd7MDeFOuU) </br>
 [Playable Link](https://kishore-karic.itch.io/dispersion) </br>
 
